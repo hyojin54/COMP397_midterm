@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COMP397 - Midterm - Hyojin Kim (300950009)</title>
+</head>
+<body onload="init();">
+	<h1>COMP397 - Midterm - Hyojin Kim (300950009)</h1>
+	<canvas id="canvas" width="600" height="600" style="border: black solid 1px"></canvas>
+
+    <!-- JavaScript Libraries-->
+    <script src="Scripts/lib/easeljs-0.8.1.min.js"></script>
+    <script src="Scripts/lib/tweenjs-0.6.1.min.js"></script>
+    <script src="Scripts/lib/soundjs-0.6.1.min.js"></script>
+    <script src="Scripts/lib/preloadjs-0.6.1.min.js"></script>
+</body>
+
+<script>
+	function init() {
+		var stage;
+		var queue;
+		var label1, label2;
+
+		// init
+        queue = new createjs.LoadQueue();
+        queue.addEventListener("complete", loadComplete);
+        queue.loadManifest([
+			{id:"dice1", src:"Assets/images/1.png"},
+			{id:"dice2", src:"Assets/images/2.png"},
+			{id:"dice3", src:"Assets/images/3.png"},
+			{id:"dice4", src:"Assets/images/4.png"},
+			{id:"dice5", src:"Assets/images/5.png"},
+			{id:"dice6", src:"Assets/images/6.png"},
+			{id:"diceBlank", src:"Assets/images/blank.png"},
+			{id:"btnStart", src:"Assets/images/startButton.png"}
+        ]);
+		
+		function loadComplete() {
+			setupStage();
+			setDiceImage();
+			btnStart();
+		}
+		
+		function setupStage() {
+			stage = new createjs.Stage(document.getElementById('canvas'));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", function(){
+				stage.update();
+			});
+		}
+		
+		// get random number 
+		function getRandomNumber() {
+			var random = Math.floor(Math.random() * 6 + 1);
+			var str;
+			
+			switch (random) {
+				case 1: str = "1"; break;
+				case 2: str = "2"; break;
+				case 3: str = "3"; break;
+				case 4: str = "4"; break;
+				case 5: str = "5"; break;
+				case 6: str = "6"; break;
+			}
+			return str;
+		}
+		
+		// build btn and click listener
+		function btnStart() {
+			var img3 = queue.getResult("btnStart");
+			var btn = new createjs.Bitmap(img3);
+			
+			btn.x = 300;
+			btn.y = 400;
+			
+			stage.addChild(btn);
+			stage.update();
+			
+			btn.addEventListener('click', () => {
+				setDiceImage();
+			});
+		}
+		
+		// set dice images with random number
+		function setDiceImage() {
+			var firstNum = getRandomNumber();
+			var secondNum = getRandomNumber();
+		
+			var img1 = queue.getResult("dice"+firstNum);
+			var img2 = queue.getResult("dice"+secondNum);
+			var dice1, dice2;
+			
+			dice1 = new createjs.Bitmap(img1);
+			dice2 = new createjs.Bitmap(img2);
+			
+			dice1.x = 70;
+			dice2.x = 300;
+			dice1.y = dice2.y = 100;
+			
+			setLabelInfo(firstNum, secondNum);
+
+			stage.addChild(dice1, dice2);
+			stage.update();
+		}
+		
+		// set label information 
+		function setLabelInfo(first, second) {
+			stage.removeChild(label1, label2);
+		
+			label1 = new createjs.Text(first, "20px Consolas", "#00000");
+			label2 = new createjs.Text(second, "20px Consolas", "#00000");
+			
+			label1.x = 70;
+			label2.x = 300;
+			label1.y = label2.y = 330;
+			
+			stage.addChild(label1, label2);
+			stage.update();
+		}
+		
+		function handleTick(e) {
+			stage.update();
+		}
+    }
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
